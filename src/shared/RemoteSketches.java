@@ -1,8 +1,6 @@
 package shared;
 
-import client.Client;
 import client.ClientCanvas;
-import server.Server;
 import server.ServerCanvas;
 
 import java.awt.*;

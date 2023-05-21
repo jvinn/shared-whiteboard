@@ -1,10 +1,5 @@
 package shared;
 
-import shared.IRemoteSketches;
-import shared.ShapeType;
-import shared.Sketches;
-import shared.Utils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
