@@ -7,6 +7,18 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Logger;
 
+/*
+TODO:
+The clients need to create their own RMI objects which are iterated through by the server to update their whiteboards
+This RMI object should be the client canvases so the server can then call repaint on them
+
+See RemotePaint in the example code
+The UnicastRemoteObject (RemotePaint) should contain the canvas
+
+
+
+ */
+
 public class Server {
     private static final Logger log = Logger.getLogger(Server.class.getName());
     private String serverIP;

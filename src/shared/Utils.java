@@ -26,12 +26,12 @@ public class Utils {
         }
     }
 
-    public static void initializeButtons(MyCanvas canvas, JPanel buttonPanel, JButton freehandButton, JButton lineButton, JButton circleButton, JButton ovalButton, JButton rectangleButton) {
-        freehandButton = new JButton("Freehand");
-        lineButton = new JButton("Line");
-        circleButton = new JButton("Circle");
-        ovalButton = new JButton("Oval");
-        rectangleButton = new JButton("Rectangle");
+    public static void initializeButtons(MyCanvas canvas, JPanel buttonPanel) {
+        JButton freehandButton = new JButton("Freehand");
+        JButton lineButton = new JButton("Line");
+        JButton circleButton = new JButton("Circle");
+        JButton ovalButton = new JButton("Oval");
+        JButton rectangleButton = new JButton("Rectangle");
 
         freehandButton.addActionListener(e -> canvas.setCurrentShapeType(ShapeType.FREEHAND));
         lineButton.addActionListener(e -> canvas.setCurrentShapeType(ShapeType.LINE));
