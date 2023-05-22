@@ -26,6 +26,8 @@ public class MyCanvas extends JPanel {
                 sketches.addFreehand(null);
 
                 try {
+                    remoteSketches.addShape(currentShapeType, startPoint, endPoint);
+
                     switch(currentShapeType) {
                         case FREEHAND -> remoteSketches.addFreehand(sketches.getFreehandPoints());
                         case LINE -> remoteSketches.addLine(startPoint, endPoint);

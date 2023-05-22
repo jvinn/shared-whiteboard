@@ -2,6 +2,9 @@ package shared;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class Utils {
@@ -46,5 +49,27 @@ public class Utils {
         buttonPanel.add(rectangleButton);
 
         buttonPanel.setBackground(Color.PINK);
+    }
+
+    public static Shape shapeFromPoints(ShapeType shapeType, Point p1, Point p2) {
+        Shape shape;
+
+        switch(shapeType) {
+            case LINE -> {
+                shape = new Line2D.Float(p1, p2);
+            }
+            case CIRCLE -> {
+                int radius = (int) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+                shape = new Ellipse2D.Float(p1.x - radius, p1.y - radius, radius * 2, radius * 2);
+            }
+            case OVAL -> {
+                shape = new Ellipse2D.Float(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+            }
+            case RECTANGLE -> {
+                shape = new Rectangle2D.Float(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y));
+            }
+            default -> shape = null;
+        }
+        return shape;
     }
 }

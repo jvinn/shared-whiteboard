@@ -1,6 +1,5 @@
 package shared;
 
-import client.ClientCanvas;
 import server.ServerCanvas;
 
 import java.awt.*;
@@ -16,7 +15,7 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
     private static final Logger log = Logger.getLogger(RemoteSketches.class.getName());
     private final ArrayList<Shape> shapes = new ArrayList<>();
     private final ArrayList<Point> freehandPoints = new ArrayList<>();
-    private final ArrayList<ClientCanvas> clientCanvases = new ArrayList<>();
+    private final ArrayList<IRemoteCanvas> clientCanvases = new ArrayList<>();
     private final ServerCanvas serverCanvas;
 
     public RemoteSketches(ServerCanvas serverCanvas) throws RemoteException {
@@ -30,6 +29,11 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
         freehandPoints.add(null);
         freehandPoints.addAll(points);
         updateWhiteboards();
+    }
+
+    @Override
+    public void addShape(ShapeType shapeType, Point p1, Point p2) throws RemoteException {
+        shapes.add(Utils.shapeFromPoints(shapeType, p1, p2));
     }
 
     @Override
@@ -71,14 +75,17 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
         serverCanvas.updateSketches(shapes, freehandPoints);
         serverCanvas.repaint();
 
-        for(ClientCanvas clientCanvas : clientCanvases) {
-            clientCanvas.updateSketches(shapes, freehandPoints);
-            clientCanvas.repaint();
+        try {
+            for(IRemoteCanvas clientCanvas : clientCanvases) {
+                clientCanvas.updateCanvas(shapes, freehandPoints);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void addClientCanvas(ClientCanvas clientCanvas) {
+    public void addClientCanvas(IRemoteCanvas clientCanvas) {
         clientCanvases.add(clientCanvas);
     }
 }

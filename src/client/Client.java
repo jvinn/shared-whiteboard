@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Logger;
 
 public class Client {
@@ -26,8 +27,10 @@ public class Client {
             this.remoteSketches = (IRemoteSketches) registry.lookup("RemoteSketches");
             this.clientUI = new ClientUI(username + " [Client]");
 
-            clientUI.getCanvas().setRemoteSketches(remoteSketches);
-            remoteSketches.addClientCanvas(clientUI.getCanvas());
+            ClientCanvas clientCanvas = clientUI.getCanvas();
+            clientCanvas.setRemoteSketches(remoteSketches);
+            UnicastRemoteObject.exportObject(clientCanvas, 4444);
+            remoteSketches.addClientCanvas(clientCanvas);
 
             log.info("New client \"" + username + "\" connected to " + serverIP + ":" + serverPort);
 

@@ -1,10 +1,5 @@
 package client;
 
-import client.ClientCanvas;
-import server.ServerCanvas;
-import shared.IRemoteSketches;
-import shared.ShapeType;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -14,6 +9,7 @@ import static shared.Utils.initializeButtons;
 public class ClientUI {
     private JFrame jFrame;
     private JPanel buttonPanel;
+    private JPanel userPanel;
     private ClientCanvas canvas;
 
     public ClientUI(String title) {
@@ -28,8 +24,13 @@ public class ClientUI {
         buttonPanel = new JPanel();
         initializeButtons(canvas, buttonPanel);
 
+        userPanel = new JPanel();
+        userPanel.setBackground(Color.CYAN);
+        userPanel.setSize(100, 100);
+
         jFrame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
         jFrame.getContentPane().add(canvas, BorderLayout.CENTER);
+        jFrame.getContentPane().add(userPanel, BorderLayout.EAST);
         jFrame.setVisible(true);
     }
 
