@@ -6,6 +6,7 @@ import shared.MyCanvas;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ClientCanvas extends MyCanvas implements IRemoteCanvas {
     public ClientCanvas() {
@@ -13,8 +14,8 @@ public class ClientCanvas extends MyCanvas implements IRemoteCanvas {
     }
 
     @Override
-    public void updateCanvas(ArrayList<Shape> shapes, ArrayList<Point> freehandPoints) throws RemoteException {
-        this.updateSketches(shapes, freehandPoints);
+    public void updateCanvas(ArrayList<Shape> shapes, ArrayList<Point> freehand, HashMap<String, Point> text) throws RemoteException {
+        this.updateSketches(shapes, freehand, text);
         repaint();
     }
 }

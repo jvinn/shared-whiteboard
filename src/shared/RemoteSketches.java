@@ -9,23 +9,24 @@ import java.awt.geom.Rectangle2D;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketches {
     private static final Logger log = Logger.getLogger(RemoteSketches.class.getName());
     private final ArrayList<Shape> shapes = new ArrayList<>();
     private final ArrayList<Point> freehandPoints = new ArrayList<>();
+    private final HashMap<String, Point> text = new HashMap<>();
     private final ArrayList<IRemoteCanvas> clientCanvases = new ArrayList<>();
-    private final ServerCanvas serverCanvas;
+    private final MyCanvas serverCanvas;
 
-    public RemoteSketches(ServerCanvas serverCanvas) throws RemoteException {
+    public RemoteSketches(MyCanvas serverCanvas) throws RemoteException {
         super();
         this.serverCanvas = serverCanvas;
     }
 
     @Override
     public void addFreehand(ArrayList<Point> points) throws RemoteException {
-        log.info("addFreehand");
         freehandPoints.add(null);
         freehandPoints.addAll(points);
         updateWhiteboards();
@@ -34,50 +35,23 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
     @Override
     public void addShape(ShapeType shapeType, Point p1, Point p2) throws RemoteException {
         shapes.add(Utils.shapeFromPoints(shapeType, p1, p2));
-    }
-
-    @Override
-    public void addLine(Point p1, Point p2) throws RemoteException {
-        log.info("addLine");
-        shapes.add(new Line2D.Float(p1, p2));
         updateWhiteboards();
     }
 
     @Override
-    public void addCircle(Point p1, Point p2) throws RemoteException {
-        log.info("addCircle");
-        int radius = (int) Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-        shapes.add(new Ellipse2D.Float(p1.x - radius, p1.y - radius, radius * 2, radius * 2));
-        updateWhiteboards();
-    }
-
-    @Override
-    public void addOval(Point p1, Point p2) throws RemoteException {
-        log.info("addOval");
-        shapes.add(new Ellipse2D.Float(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y));
-        updateWhiteboards();
-    }
-
-    @Override
-    public void addRectangle(Point p1, Point p2) throws RemoteException {
-        log.info("addRectangle");
-        shapes.add(new Rectangle2D.Float(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y)));
+    public void addText(String text, Point point) throws RemoteException {
+        this.text.put(text, point);
         updateWhiteboards();
     }
 
     @Override
     public void updateWhiteboards() {
-        log.info("New shape added, updating all canvases");
-
-        System.out.println("num clients to be updated: " + clientCanvases.size());
-        System.out.println(clientCanvases);
-
-        serverCanvas.updateSketches(shapes, freehandPoints);
+        serverCanvas.updateSketches(shapes, freehandPoints, text);
         serverCanvas.repaint();
 
         try {
             for(IRemoteCanvas clientCanvas : clientCanvases) {
-                clientCanvas.updateCanvas(shapes, freehandPoints);
+                clientCanvas.updateCanvas(shapes, freehandPoints, text);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,10 +6,12 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Sketches implements Serializable {
     private ArrayList<Shape> shapes = new ArrayList<>();
-    private ArrayList<Point> freehandPoints = new ArrayList<>();
+    private ArrayList<Point> freehand = new ArrayList<>();
+    private HashMap<String, Point> text = new HashMap<>();
 
     public Sketches() {
         super();
@@ -24,11 +26,19 @@ public class Sketches implements Serializable {
     }
 
     public ArrayList<Point> getFreehandPoints() {
-        return freehandPoints;
+        return freehand;
     }
 
     public void setFreehandPoints(ArrayList<Point> freehandPoints) {
-        this.freehandPoints = freehandPoints;
+        this.freehand = freehandPoints;
+    }
+
+    public HashMap<String, Point> getText() {
+        return text;
+    }
+
+    public void setText(HashMap<String, Point> text) {
+        this.text = text;
     }
 
     public void addShape(ShapeType shapeType, Point startPoint, Point endPoint) {
@@ -46,7 +56,11 @@ public class Sketches implements Serializable {
     }
 
     public void addFreehand(Point point) {
-        freehandPoints.add(point);
+        freehand.add(point);
+    }
+
+    public void addText(String string, Point point) {
+        text.put(string, point);
     }
 }
 

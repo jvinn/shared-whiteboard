@@ -6,8 +6,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class MyCanvas extends JPanel {
+public class MyCanvas extends JPanel implements IRemoteCanvas {
     public ShapeType currentShapeType = ShapeType.FREEHAND;
     public Point startPoint, endPoint;
     public final Sketches sketches = new Sketches();
@@ -23,23 +24,25 @@ public class MyCanvas extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 endPoint = e.getPoint();
-                sketches.addFreehand(null);
 
                 try {
-                    remoteSketches.addShape(currentShapeType, startPoint, endPoint);
-
-                    switch(currentShapeType) {
-                        case FREEHAND -> remoteSketches.addFreehand(sketches.getFreehandPoints());
-                        case LINE -> remoteSketches.addLine(startPoint, endPoint);
-                        case CIRCLE -> remoteSketches.addCircle(startPoint, endPoint);
-                        case RECTANGLE -> remoteSketches.addRectangle(startPoint, endPoint);
-                        case OVAL -> remoteSketches.addOval(startPoint, endPoint);
+                    if(currentShapeType == ShapeType.FREEHAND) {
+                        sketches.addFreehand(null);
+                        remoteSketches.addFreehand(sketches.getFreehandPoints());
+                    }
+                    else if(currentShapeType == ShapeType.TEXT) {
+                        String text = JOptionPane.showInputDialog("Enter your text:");
+                        sketches.addText(text, endPoint);
+                        remoteSketches.addText(text, endPoint);
+                    }
+                    else {
+                        sketches.addShape(currentShapeType, startPoint, endPoint);
+                        remoteSketches.addShape(currentShapeType, startPoint, endPoint);
                     }
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
                 }
 
-                sketches.addShape(currentShapeType, startPoint, endPoint);
                 repaint();
             }
         });
@@ -61,6 +64,7 @@ public class MyCanvas extends JPanel {
 
         Utils.drawShapes(g2d, sketches.getShapes());
         Utils.drawFreehand(g2d, sketches.getFreehandPoints());
+        Utils.drawText(g2d, sketches.getText());
     }
 
     public void setCurrentShapeType(ShapeType currentShapeType) {
@@ -71,8 +75,15 @@ public class MyCanvas extends JPanel {
         this.remoteSketches = remoteSketches;
     }
 
-    public void updateSketches(ArrayList<Shape> shapes, ArrayList<Point> freehandPoints) {
+    public void updateSketches(ArrayList<Shape> shapes, ArrayList<Point> freehandPoints, HashMap<String, Point> text) {
         this.sketches.setShapes(shapes);
         this.sketches.setFreehandPoints(freehandPoints);
+        this.sketches.setText(text);
+    }
+
+    @Override
+    public void updateCanvas(ArrayList<Shape> shapes, ArrayList<Point> freehand, HashMap<String, Point> text) throws RemoteException {
+        this.updateSketches(shapes, freehand, text);
+        repaint();
     }
 }

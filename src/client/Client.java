@@ -1,6 +1,8 @@
 package client;
 
 import shared.IRemoteSketches;
+import shared.MyCanvas;
+import shared.UserInterface;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -16,7 +18,7 @@ public class Client {
     private final String username;
     private final Registry registry;
     private final IRemoteSketches remoteSketches;
-    private final ClientUI clientUI;
+    private final UserInterface clientUI;
 
     public Client(String serverIP, int serverPort, String username) {
         try {
@@ -25,9 +27,9 @@ public class Client {
             this.username = username;
             this.registry = LocateRegistry.getRegistry("localhost");
             this.remoteSketches = (IRemoteSketches) registry.lookup("RemoteSketches");
-            this.clientUI = new ClientUI(username + " [Client]");
+            this.clientUI = new UserInterface(username + " [Client]");
 
-            ClientCanvas clientCanvas = clientUI.getCanvas();
+            MyCanvas clientCanvas = clientUI.getCanvas();
             clientCanvas.setRemoteSketches(remoteSketches);
             UnicastRemoteObject.exportObject(clientCanvas, 4444);
             remoteSketches.addClientCanvas(clientCanvas);

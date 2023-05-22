@@ -2,6 +2,7 @@ package server;
 
 import shared.IRemoteSketches;
 import shared.RemoteSketches;
+import shared.UserInterface;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -24,7 +25,7 @@ public class Server {
     private String serverIP;
     private int serverPort;
     private String username;
-    private ServerUI serverUI;
+    private UserInterface serverUI;
     private Registry registry;
     private IRemoteSketches remoteSketches;
 
@@ -34,7 +35,7 @@ public class Server {
             this.serverPort = serverPort;
             this.username = username;
 
-            this.serverUI = new ServerUI(username + " [Server]");
+            this.serverUI = new UserInterface(username + " [Server]");
             this.registry = LocateRegistry.createRegistry(1099);
             this.remoteSketches = new RemoteSketches(serverUI.getCanvas());
 
