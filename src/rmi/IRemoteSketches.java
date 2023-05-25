@@ -1,4 +1,7 @@
-package shared;
+package rmi;
+
+import shared.MyCanvas;
+import shared.ShapeType;
 
 import java.awt.*;
 import java.rmi.Remote;
@@ -11,4 +14,6 @@ public interface IRemoteSketches extends Remote {
     void addText(String text, Point point) throws RemoteException;
     void addClientCanvas(IRemoteCanvas clientCanvas) throws RemoteException;
     void updateWhiteboards() throws RemoteException;
+
+    void setServerCanvas(MyCanvas serverCanvas) throws RemoteException;
 }

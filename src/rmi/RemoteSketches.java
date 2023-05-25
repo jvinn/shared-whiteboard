@@ -1,11 +1,10 @@
-package shared;
+package rmi;
 
-import server.ServerCanvas;
+import shared.MyCanvas;
+import shared.ShapeType;
+import shared.Utils;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -18,11 +17,10 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
     private final ArrayList<Point> freehandPoints = new ArrayList<>();
     private final HashMap<String, Point> text = new HashMap<>();
     private final ArrayList<IRemoteCanvas> clientCanvases = new ArrayList<>();
-    private final MyCanvas serverCanvas;
+    private MyCanvas serverCanvas;
 
-    public RemoteSketches(MyCanvas serverCanvas) throws RemoteException {
+    public RemoteSketches() throws RemoteException {
         super();
-        this.serverCanvas = serverCanvas;
     }
 
     @Override
@@ -61,5 +59,10 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
     @Override
     public void addClientCanvas(IRemoteCanvas clientCanvas) {
         clientCanvases.add(clientCanvas);
+    }
+
+    @Override
+    public void setServerCanvas(MyCanvas serverCanvas) {
+        this.serverCanvas = serverCanvas;
     }
 }

@@ -1,10 +1,17 @@
 package shared;
 
+import rmi.IRemoteChatList;
+import rmi.RemoteChatPanel;
+import rmi.RemoteUserPanel;
+
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +66,50 @@ public class Utils {
         buttonPanel.add(rectangleButton);
         buttonPanel.add(textButton);
 
-        buttonPanel.setBackground(Color.PINK);
+        buttonPanel.setBackground(new Color(121, 252, 210));
+        buttonPanel.setBorder(BorderFactory.createMatteBorder(2,2,1,2, Color.BLACK));
+    }
+
+    public static void initializeUserList(RemoteUserPanel userPanel, JList<String> userList) {
+        userPanel.setBackground(new Color(201, 255, 238));
+        userPanel.setPreferredSize(new Dimension(100, 100));
+        userPanel.setBorder(BorderFactory.createMatteBorder(1,1,1,2, Color.BLACK));
+
+        JLabel userLabel = new JLabel("Users");
+
+        userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
+        userPanel.add(userLabel);
+        userPanel.add(userList);
+    }
+
+    public static void initializeChat(IRemoteChatList remoteChatList, RemoteChatPanel chatPanel, String username) {
+        chatPanel.setBackground(new Color(207, 253, 255));
+        chatPanel.setPreferredSize(new Dimension(800, 120));
+        chatPanel.setBorder(BorderFactory.createMatteBorder(1,2,2,2, Color.BLACK));
+
+        JLabel chatLabel = new JLabel("Chat");
+        JTextField textField = new JTextField(20);
+        textField.setMaximumSize(new Dimension(500, 20));
+
+        textField.addActionListener(e -> {
+            try {
+                String text = textField.getText();
+                remoteChatList.addMessage(new ChatMessage(username, text));
+                textField.setText("");
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        centerPanel.setBackground(Color.WHITE);
+        chatLabel.setBackground(Color.WHITE);
+        textField.setBackground(Color.WHITE);
+
+        centerPanel.add(chatLabel);
+        centerPanel.add(textField);
+
+        chatPanel.add(centerPanel);
     }
 
     public static Shape shapeFromPoints(ShapeType shapeType, Point p1, Point p2) {

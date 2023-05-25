@@ -1,5 +1,8 @@
 package shared;
 
+import rmi.IRemoteCanvas;
+import rmi.IRemoteSketches;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,10 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MyCanvas extends JPanel implements IRemoteCanvas {
-    public ShapeType currentShapeType = ShapeType.FREEHAND;
-    public Point startPoint, endPoint;
-    public final Sketches sketches = new Sketches();
-    public IRemoteSketches remoteSketches;
+    private ShapeType currentShapeType = ShapeType.FREEHAND;
+    private Color currentColor = Color.BLACK;
+    private Point startPoint, endPoint;
+    private final Sketches sketches = new Sketches();
+    private IRemoteSketches remoteSketches;
 
     public MyCanvas() {
         addMouseListener(new MouseAdapter() {
@@ -85,5 +89,10 @@ public class MyCanvas extends JPanel implements IRemoteCanvas {
     public void updateCanvas(ArrayList<Shape> shapes, ArrayList<Point> freehand, HashMap<String, Point> text) throws RemoteException {
         this.updateSketches(shapes, freehand, text);
         repaint();
+    }
+
+    public void setCurrentColor(Color currentColor) {
+        this.currentColor = currentColor;
+        System.out.println("Current color: " + currentColor);
     }
 }
