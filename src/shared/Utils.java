@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -70,6 +72,59 @@ public class Utils {
         buttonPanel.setBorder(BorderFactory.createMatteBorder(2,2,1,2, Color.BLACK));
     }
 
+    public static void initializeColors(JPanel colorPanel, MyCanvas canvasPanel) {
+        colorPanel.setPreferredSize(new Dimension(800, 30));
+        colorPanel.setBorder(BorderFactory.createMatteBorder(1,2,1,2, Color.BLACK));
+
+        Color[] colors = {
+                new Color(255, 0, 0),
+                new Color(255, 165, 0),
+                new Color(255, 255, 0),
+                new Color(0, 128, 0),
+                new Color(0, 0, 255),
+                new Color(75, 0, 130),
+                new Color(143, 0, 255),
+                new Color(255, 192, 203),
+                new Color(220, 20, 60),
+                new Color(255, 105, 180),
+                new Color(219, 112, 147),
+                new Color(176, 224, 230),
+                new Color(64, 224, 208),
+                new Color(72, 209, 204),
+                new Color(0, 206, 209),
+                new Color(135, 206, 250),
+                new Color(30, 144, 255),
+                new Color(0, 191, 255),
+                new Color(127, 255, 212),
+                new Color(102, 205, 170),
+                new Color(60, 179, 113),
+                new Color(46, 139, 87),
+                new Color(154, 205, 50),
+                new Color(85, 107, 47),
+                new Color(107, 142, 35),
+                new Color(189, 183, 107),
+                new Color(238, 232, 170),
+                new Color(240, 230, 140),
+                new Color(255, 250, 205),
+                new Color(255, 248, 220)
+        };
+
+        for (Color color : colors) {
+            JPanel colorSquare = new JPanel();
+            colorSquare.setBackground(color);
+            colorSquare.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+            colorSquare.setPreferredSize(new Dimension(20, 20));
+            colorSquare.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    canvasPanel.setCurrentColor(color);
+                }
+            });
+            colorPanel.add(colorSquare);
+        }
+    }
+
     public static void initializeUserList(RemoteUserPanel userPanel, JList<String> userList) {
         userPanel.setBackground(new Color(201, 255, 238));
         userPanel.setPreferredSize(new Dimension(100, 100));
@@ -90,6 +145,7 @@ public class Utils {
         JLabel chatLabel = new JLabel("Chat");
         JTextField textField = new JTextField(20);
         textField.setMaximumSize(new Dimension(500, 20));
+        textField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         textField.addActionListener(e -> {
             try {
