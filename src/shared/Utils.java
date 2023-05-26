@@ -5,8 +5,6 @@ import rmi.RemoteChatPanel;
 import rmi.RemoteUserPanel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,6 +19,7 @@ import java.util.Map;
 public class Utils {
     public static void drawShapes(Graphics2D g2d, ArrayList<Shape> shapes) {
         for (Shape shape : shapes) {
+            // TODO: Set color before drawing
             g2d.draw(shape);
         }
     }
@@ -35,12 +34,14 @@ public class Utils {
             Point p2 = freehandPoints.get(i + 1);
 
             if(p1 != null && p2 != null) {
+                // TODO: Set color before drawing
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }
     }
 
     public static void drawText(Graphics2D g2d, HashMap<String, Point> texts) {
+        // TODO: Set color before drawing
         for (Map.Entry<String, Point> text : texts.entrySet()) {
             g2d.drawString(text.getKey(), text.getValue().x, text.getValue().y);
         }

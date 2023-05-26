@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Sketches implements Serializable {
-    private ArrayList<Shape> shapes = new ArrayList<>();
+    private ArrayList<Shape> shapes = new ArrayList<>(); // TODO: Update these to contain a color
     private ArrayList<Point> freehand = new ArrayList<>();
     private HashMap<String, Point> text = new HashMap<>();
 
