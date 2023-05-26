@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemoteUserList extends UnicastRemoteObject implements IRemoteUserList {
-    private List<IRemoteUserPanel> clientUserPanels = new ArrayList<>();
-    private List<String> userList = new ArrayList<>();
+    private final List<IRemoteUserPanel> clientUserPanels = new ArrayList<>();
+    private final List<String> userList = new ArrayList<>();
     private UserInterface serverUI;
 
     public RemoteUserList() throws RemoteException {

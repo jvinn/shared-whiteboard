@@ -15,9 +15,9 @@ public class UserInterface {
     private final RemoteUserPanel userPanel;
     private final RemoteChatPanel chatPanel;
     private JList<String> userList;
-    private MyCanvas canvasPanel;
+    private final MyCanvas canvasPanel;
 
-    public UserInterface(String title, boolean isServer, IRemoteChatList remoteChatList, String username) {
+    public UserInterface(String title, IRemoteChatList remoteChatList, String username) {
 
         JFrame jFrame = new JFrame();
         jFrame.setTitle(title);
@@ -70,8 +70,5 @@ public class UserInterface {
         userPanel.add(userList);
         userPanel.revalidate();
         userPanel.repaint();
-    }
-
-    public void setRemoteChatList() {
     }
 }

@@ -5,7 +5,6 @@ import shared.ChatMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RemoteChatPanel extends JPanel implements IRemoteChatPanel {
     public RemoteChatPanel() {
@@ -20,11 +19,8 @@ public class RemoteChatPanel extends JPanel implements IRemoteChatPanel {
             removeAll();
             add(headingAndTextInput);
 
-            List<String> chatHistory = chatMessages.stream()
-                    .map(message -> message.getUsername() + ": " + message.getContent())
-                    .collect(Collectors.toList());
-
-            JList<String> chatHistoryList = new JList<>(chatHistory.toArray(new String[0]));
+            JList<String> chatHistoryList = new JList<>(chatMessages.stream()
+                    .map(message -> message.username() + ": " + message.content()).toArray(String[]::new));
             JScrollPane chatScrollPane = new JScrollPane(chatHistoryList);
             add(chatScrollPane);
             revalidate();

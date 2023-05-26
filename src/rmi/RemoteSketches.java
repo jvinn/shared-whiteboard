@@ -10,10 +10,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketches {
-    private static final Logger log = Logger.getLogger(RemoteSketches.class.getName());
     private final ArrayList<ColoredElement<Shape>> shapes = new ArrayList<>();
     private final ArrayList<ColoredElement<Point>> freehandPoints = new ArrayList<>();
     private final HashMap<String, ColoredElement<Point>> text = new HashMap<>();

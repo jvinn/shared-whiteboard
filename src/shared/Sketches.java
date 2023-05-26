@@ -42,19 +42,7 @@ public class Sketches implements Serializable {
     }
 
     public void addShape(ShapeType shapeType, Point startPoint, Point endPoint, Color color) {
-        Shape shape = null;
-        switch (shapeType) {
-            case LINE -> shape = new Line2D.Float(startPoint, endPoint);
-            case CIRCLE -> {
-                int radius = (int) Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
-                shape = new Ellipse2D.Float(startPoint.x - radius, startPoint.y - radius, radius * 2, radius * 2);
-            }
-            case OVAL ->
-                    shape = new Ellipse2D.Float(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
-            case RECTANGLE ->
-                    shape = new Rectangle2D.Float(Math.min(startPoint.x, endPoint.x), Math.min(startPoint.y, endPoint.y), Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
-        }
-        shapes.add(new ColoredElement<>(shape, color));
+        shapes.add(new ColoredElement<>(Utils.shapeFromPoints(shapeType, startPoint, endPoint), color));
     }
 
     public void addFreehand(Point point, Color color) {

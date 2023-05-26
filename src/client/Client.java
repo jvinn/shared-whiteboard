@@ -1,7 +1,6 @@
 package client;
 
 import rmi.*;
-import shared.ChatMessage;
 import shared.MyCanvas;
 import shared.UserInterface;
 
@@ -10,26 +9,18 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Client {
     private static final Logger log = Logger.getLogger(Client.class.getName());
-    private final String username;
-    private final Registry registry;
-    private final IRemoteSketches remoteSketches;
-    private final IRemoteUserList remoteUsers;
-    private final IRemoteChatList remoteChat;
-    private final UserInterface clientUI;
 
     public Client(String serverIP, int serverPort, String username) {
         try {
-            this.username = username;
-            this.registry = LocateRegistry.getRegistry("localhost");
-            this.remoteChat = (IRemoteChatList) registry.lookup("RemoteChat");
-            this.remoteSketches = (IRemoteSketches) registry.lookup("RemoteSketches");
-            this.remoteUsers = (IRemoteUserList) registry.lookup("RemoteUsers");
-            this.clientUI = new UserInterface(username + " [Client]", false, remoteChat, username);
+            Registry registry = LocateRegistry.getRegistry("localhost");
+            IRemoteChatList remoteChat = (IRemoteChatList) registry.lookup("RemoteChat");
+            IRemoteSketches remoteSketches = (IRemoteSketches) registry.lookup("RemoteSketches");
+            IRemoteUserList remoteUsers = (IRemoteUserList) registry.lookup("RemoteUsers");
+            UserInterface clientUI = new UserInterface(username + " [Client]", remoteChat, username);
 
             RemoteUserPanel userPanel = clientUI.getUserPanel();
             UnicastRemoteObject.exportObject(userPanel, serverPort);
