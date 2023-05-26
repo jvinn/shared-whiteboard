@@ -17,33 +17,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Utils {
-    public static void drawShapes(Graphics2D g2d, ArrayList<Shape> shapes) {
-        for (Shape shape : shapes) {
-            // TODO: Set color before drawing
-            g2d.draw(shape);
+    public static void drawShapes(Graphics2D g2d, ArrayList<ColoredElement<Shape>> shapes) {
+        for (ColoredElement<Shape> shape : shapes) {
+            g2d.setColor(shape.getColor());
+            g2d.draw(shape.getElement());
         }
     }
 
-    public static void drawFreehand(Graphics2D g2d, ArrayList<Point> freehandPoints) {
+    public static void drawFreehand(Graphics2D g2d, ArrayList<ColoredElement<Point>> freehandPoints) {
         if (freehandPoints.size() < 2) {
             return;
         }
 
         for (int i = 0; i < freehandPoints.size() - 1; i++) {
-            Point p1 = freehandPoints.get(i);
-            Point p2 = freehandPoints.get(i + 1);
+            Point p1 = freehandPoints.get(i).getElement();
+            Point p2 = freehandPoints.get(i + 1).getElement();
 
             if(p1 != null && p2 != null) {
-                // TODO: Set color before drawing
+                g2d.setColor(freehandPoints.get(i).getColor());
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }
     }
 
-    public static void drawText(Graphics2D g2d, HashMap<String, Point> texts) {
-        // TODO: Set color before drawing
-        for (Map.Entry<String, Point> text : texts.entrySet()) {
-            g2d.drawString(text.getKey(), text.getValue().x, text.getValue().y);
+    public static void drawText(Graphics2D g2d, HashMap<String, ColoredElement<Point>> texts) {
+        for (Map.Entry<String, ColoredElement<Point>> text : texts.entrySet()) {
+            g2d.setColor(text.getValue().getColor());
+            g2d.drawString(text.getKey(), text.getValue().getElement().x, text.getValue().getElement().y);
         }
     }
 

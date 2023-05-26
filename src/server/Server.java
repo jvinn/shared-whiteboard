@@ -34,7 +34,7 @@ public class Server {
             registry.bind("RemoteChat", remoteChat);
 
             serverUI.getCanvas().setRemoteSketches(remoteSketches);
-            serverUI.setRemoteChatList(remoteChat);
+            serverUI.setRemoteChatList();
             remoteChat.setServerChatPanel(serverUI.getChatPanel());
 
             log.info("New server started by \"" + username + "\" at " + serverIP + ":" + serverPort);

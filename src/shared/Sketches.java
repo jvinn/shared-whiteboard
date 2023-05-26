@@ -9,58 +9,60 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Sketches implements Serializable {
-    private ArrayList<Shape> shapes = new ArrayList<>(); // TODO: Update these to contain a color
-    private ArrayList<Point> freehand = new ArrayList<>();
-    private HashMap<String, Point> text = new HashMap<>();
+    private ArrayList<ColoredElement<Shape>> shapes = new ArrayList<>();
+    private ArrayList<ColoredElement<Point>> freehand = new ArrayList<>();
+    private HashMap<String, ColoredElement<Point>> text = new HashMap<>();
 
     public Sketches() {
         super();
     }
 
-    public ArrayList<Shape> getShapes() {
+    public ArrayList<ColoredElement<Shape>> getShapes() {
         return shapes;
     }
 
-    public void setShapes(ArrayList<Shape> shapes) {
+    public void setShapes(ArrayList<ColoredElement<Shape>> shapes) {
         this.shapes = shapes;
     }
 
-    public ArrayList<Point> getFreehandPoints() {
+    public ArrayList<ColoredElement<Point>> getFreehandPoints() {
         return freehand;
     }
 
-    public void setFreehandPoints(ArrayList<Point> freehandPoints) {
+    public void setFreehandPoints(ArrayList<ColoredElement<Point>> freehandPoints) {
         this.freehand = freehandPoints;
     }
 
-    public HashMap<String, Point> getText() {
+    public HashMap<String, ColoredElement<Point>> getText() {
         return text;
     }
 
-    public void setText(HashMap<String, Point> text) {
+    public void setText(HashMap<String, ColoredElement<Point>> text) {
         this.text = text;
     }
 
-    public void addShape(ShapeType shapeType, Point startPoint, Point endPoint) {
+    public void addShape(ShapeType shapeType, Point startPoint, Point endPoint, Color color) {
+        Shape shape = null;
         switch (shapeType) {
-            case LINE -> shapes.add(new Line2D.Float(startPoint, endPoint));
+            case LINE -> shape = new Line2D.Float(startPoint, endPoint);
             case CIRCLE -> {
                 int radius = (int) Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
-                shapes.add(new Ellipse2D.Float(startPoint.x - radius, startPoint.y - radius, radius * 2, radius * 2));
+                shape = new Ellipse2D.Float(startPoint.x - radius, startPoint.y - radius, radius * 2, radius * 2);
             }
             case OVAL ->
-                    shapes.add(new Ellipse2D.Float(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y));
+                    shape = new Ellipse2D.Float(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
             case RECTANGLE ->
-                    shapes.add(new Rectangle2D.Float(Math.min(startPoint.x, endPoint.x), Math.min(startPoint.y, endPoint.y), Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y)));
+                    shape = new Rectangle2D.Float(Math.min(startPoint.x, endPoint.x), Math.min(startPoint.y, endPoint.y), Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
         }
+        shapes.add(new ColoredElement<>(shape, color));
     }
 
-    public void addFreehand(Point point) {
-        freehand.add(point);
+    public void addFreehand(Point point, Color color) {
+        freehand.add(new ColoredElement<>(point, color));
     }
 
-    public void addText(String string, Point point) {
-        text.put(string, point);
+    public void addText(String string, Point point, Color color) {
+        text.put(string, new ColoredElement<>(point, color));
     }
 }
 

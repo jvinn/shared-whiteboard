@@ -6,7 +6,7 @@ public class RunServerAndClients {
         new Server("localhost", 4444, "james");
         new Client("localhost", 4444, "james 1");
 
-//        for(int i = 0; i < 100; i++) {
+//        for(int i = 0; i < 20; i++) {
 //            new Client("localhost", 4444, Integer.toString(i));
 //        }
     }

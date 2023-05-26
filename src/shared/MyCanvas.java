@@ -31,17 +31,17 @@ public class MyCanvas extends JPanel implements IRemoteCanvas {
 
                 try {
                     if(currentShapeType == ShapeType.FREEHAND) {
-                        sketches.addFreehand(null);
+                        sketches.addFreehand(null, currentColor);
                         remoteSketches.addFreehand(sketches.getFreehandPoints());
                     }
                     else if(currentShapeType == ShapeType.TEXT) {
                         String text = JOptionPane.showInputDialog("Enter your text:");
-                        sketches.addText(text, endPoint);
-                        remoteSketches.addText(text, endPoint);
+                        sketches.addText(text, endPoint, currentColor);
+                        remoteSketches.addText(text, endPoint, currentColor);
                     }
                     else {
-                        sketches.addShape(currentShapeType, startPoint, endPoint);
-                        remoteSketches.addShape(currentShapeType, startPoint, endPoint);
+                        sketches.addShape(currentShapeType, startPoint, endPoint, currentColor);
+                        remoteSketches.addShape(currentShapeType, startPoint, endPoint, currentColor);
                     }
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
@@ -55,7 +55,7 @@ public class MyCanvas extends JPanel implements IRemoteCanvas {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if(currentShapeType == ShapeType.FREEHAND) {
-                    sketches.addFreehand(e.getPoint());
+                    sketches.addFreehand(e.getPoint(), currentColor);
                 }
             }
         });
@@ -79,20 +79,19 @@ public class MyCanvas extends JPanel implements IRemoteCanvas {
         this.remoteSketches = remoteSketches;
     }
 
-    public void updateSketches(ArrayList<Shape> shapes, ArrayList<Point> freehandPoints, HashMap<String, Point> text) {
+    public void updateSketches(ArrayList<ColoredElement<Shape>> shapes, ArrayList<ColoredElement<Point>> points, HashMap<String, ColoredElement<Point>> text) {
         this.sketches.setShapes(shapes);
-        this.sketches.setFreehandPoints(freehandPoints);
+        this.sketches.setFreehandPoints(points);
         this.sketches.setText(text);
     }
 
     @Override
-    public void updateCanvas(ArrayList<Shape> shapes, ArrayList<Point> freehand, HashMap<String, Point> text) throws RemoteException {
+    public void updateCanvas(ArrayList<ColoredElement<Shape>> shapes, ArrayList<ColoredElement<Point>> freehand, HashMap<String, ColoredElement<Point>> text) throws RemoteException {
         this.updateSketches(shapes, freehand, text);
         repaint();
     }
 
     public void setCurrentColor(Color currentColor) {
         this.currentColor = currentColor;
-        System.out.println("Current color: " + currentColor);
     }
 }
