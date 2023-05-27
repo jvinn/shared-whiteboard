@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketches {
-    private final ArrayList<ColoredElement<Shape>> shapes = new ArrayList<>();
-    private final ArrayList<ColoredElement<Point>> freehandPoints = new ArrayList<>();
-    private final HashMap<String, ColoredElement<Point>> text = new HashMap<>();
+    private ArrayList<ColoredElement<Shape>> shapes = new ArrayList<>();
+    private ArrayList<ColoredElement<Point>> freehand = new ArrayList<>();
+    private HashMap<String, ColoredElement<Point>> text = new HashMap<>();
     private final ArrayList<IRemoteCanvas> clientCanvases = new ArrayList<>();
     private MyCanvas serverCanvas;
 
@@ -24,7 +24,7 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
 
     @Override
     public void addFreehand(ArrayList<ColoredElement<Point>> points) throws RemoteException {
-        freehandPoints.addAll(points);
+        freehand.addAll(points);
         updateWhiteboards();
     }
 
@@ -43,12 +43,23 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
 
     @Override
     public void updateWhiteboards() {
-        serverCanvas.updateSketches(shapes, freehandPoints, text);
+        serverCanvas.updateSketches(shapes, freehand, text);
         serverCanvas.repaint();
 
         try {
             for(IRemoteCanvas clientCanvas : clientCanvases) {
-                clientCanvas.updateCanvas(shapes, freehandPoints, text);
+                clientCanvas.updateCanvas(shapes, freehand, text);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void closeClients() {
+        try {
+            for(IRemoteCanvas clientCanvas : clientCanvases) {
+                clientCanvas.closeCanvas();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,10 +69,19 @@ public class RemoteSketches extends UnicastRemoteObject implements IRemoteSketch
     @Override
     public void addClientCanvas(IRemoteCanvas clientCanvas) {
         clientCanvases.add(clientCanvas);
+        updateWhiteboards();
     }
 
     @Override
     public void setServerCanvas(MyCanvas serverCanvas) {
         this.serverCanvas = serverCanvas;
+    }
+
+    @Override
+    public void setSketches(ArrayList<ColoredElement<Shape>> shapes, ArrayList<ColoredElement<Point>> freehand, HashMap<String, ColoredElement<Point>> text) {
+        this.shapes = shapes;
+        this.freehand = freehand;
+        this.text = text;
+        updateWhiteboards();
     }
 }

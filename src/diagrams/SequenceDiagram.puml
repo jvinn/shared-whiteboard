@@ -1,0 +1,33 @@
+@startuml
+
+Client -> Registry : getRegistry("localhost")
+Registry -> Client : return registry
+Client -> Registry : lookup("RemoteChat")
+Registry -> Client : return remoteChat
+Client -> Registry : lookup("RemoteSketches")
+Registry -> Client : return remoteSketches
+Client -> Registry : lookup("RemoteUsers")
+Registry -> Client : return remoteUsers
+
+Client -> UserInterface : new UserInterface(username + " [Client]", remoteChat, username)
+
+Client -> UserInterface : getUserPanel()
+UserInterface -> Client : return userPanel
+Client -> UnicastRemoteObject : exportObject(userPanel, serverPort)
+
+Client -> UserInterface : getChatPanel()
+UserInterface -> Client : return chatPanel
+Client -> UnicastRemoteObject : exportObject(chatPanel, serverPort)
+
+Client -> UserInterface : getCanvas()
+UserInterface -> Client : return clientCanvas
+Client -> UnicastRemoteObject : exportObject(clientCanvas, serverPort)
+
+Server -> Registry : createRegistry(1099)
+
+Server -> UserInterface : new UserInterface(username + " [Server]", remoteChat, username)
+
+Server -> UserInterface : getCanvas()
+UserInterface -> Server : return serverCanvas
+
+@enduml

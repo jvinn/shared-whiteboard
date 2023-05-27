@@ -12,8 +12,9 @@ public class RemoteUserList extends UnicastRemoteObject implements IRemoteUserLi
     private final List<String> userList = new ArrayList<>();
     private UserInterface serverUI;
 
-    public RemoteUserList() throws RemoteException {
+    public RemoteUserList(String serverUsername) throws RemoteException {
         super();
+        userList.add(serverUsername);
     }
 
     @Override
@@ -31,5 +32,10 @@ public class RemoteUserList extends UnicastRemoteObject implements IRemoteUserLi
     @Override
     public void setServerUI(UserInterface serverUI) {
         this.serverUI = serverUI;
+    }
+
+    @Override
+    public List<String> getUserList() {
+        return userList;
     }
 }

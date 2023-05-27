@@ -8,9 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +52,70 @@ public class Utils {
         }
     }
 
+    public static void initializeMenuBar(JMenuBar menuBar, MyCanvas canvasPanel, JFrame jFrame) {
+        JMenu fileMenu = new JMenu("File");
+        menuBar.add(fileMenu);
+
+        JMenuItem newItem = new JMenuItem("New");
+        JMenuItem openItem = new JMenuItem("Open");
+        JMenuItem saveItem = new JMenuItem("Save");
+        JMenuItem closeItem = new JMenuItem("Close");
+
+        fileMenu.add(newItem);
+        fileMenu.add(openItem);
+        fileMenu.add(saveItem);
+        fileMenu.add(closeItem);
+
+        newItem.addActionListener(e -> {
+            canvasPanel.getSketches().getShapes().clear();
+            canvasPanel.getSketches().getFreehandPoints().clear();
+            canvasPanel.getSketches().getText().clear();
+            canvasPanel.repaint();
+            try {
+                canvasPanel.getRemoteSketches().setSketches(new ArrayList<>(), new ArrayList<>(), new HashMap<>());
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        openItem.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                try {
+                    FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+                    Sketches sketches = (Sketches) ois.readObject();
+                    canvasPanel.setSketches(sketches);
+                    ois.close();
+                    fis.close();
+                    canvasPanel.repaint();
+                    canvasPanel.getRemoteSketches().setSketches(sketches.getShapes(), sketches.getFreehandPoints(), sketches.getText());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        saveItem.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showSaveDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                try {
+                    FileOutputStream fos = new FileOutputStream(fileChooser.getSelectedFile());
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(canvasPanel.getSketches());
+                    oos.close();
+                    fos.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        closeItem.addActionListener(e -> {
+            jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
+        });
+        jFrame.setJMenuBar(menuBar);
+    }
+
     public static void initializeButtons(MyCanvas canvas, JPanel buttonPanel) {
         JButton freehandButton = new JButton("Freehand");
         JButton lineButton = new JButton("Line");
@@ -69,7 +138,7 @@ public class Utils {
         buttonPanel.add(rectangleButton);
         buttonPanel.add(textButton);
 
-        buttonPanel.setBackground(new Color(121, 252, 210));
+        buttonPanel.setBackground(new Color(255, 105, 180));
         buttonPanel.setBorder(BorderFactory.createMatteBorder(2,2,1,2, Color.BLACK));
     }
 
@@ -78,6 +147,9 @@ public class Utils {
         colorPanel.setBorder(BorderFactory.createMatteBorder(1,2,1,2, Color.BLACK));
 
         Color[] colors = {
+                new Color(255, 255, 255),
+                new Color(127, 127, 127),
+                new Color(0, 0, 0),
                 new Color(255, 0, 0),
                 new Color(255, 165, 0),
                 new Color(255, 255, 0),
@@ -104,10 +176,7 @@ public class Utils {
                 new Color(85, 107, 47),
                 new Color(107, 142, 35),
                 new Color(189, 183, 107),
-                new Color(238, 232, 170),
-                new Color(240, 230, 140),
-                new Color(255, 250, 205),
-                new Color(255, 248, 220)
+                new Color(238, 232, 170)
         };
 
         for (Color color : colors) {
@@ -127,7 +196,7 @@ public class Utils {
     }
 
     public static void initializeUserList(RemoteUserPanel userPanel, JList<String> userList) {
-        userPanel.setBackground(new Color(201, 255, 238));
+        userPanel.setBackground(new Color(255, 192, 203));
         userPanel.setPreferredSize(new Dimension(100, 100));
         userPanel.setBorder(BorderFactory.createMatteBorder(1,1,1,2, Color.BLACK));
 

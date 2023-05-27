@@ -16,23 +16,23 @@ public class Client {
 
     public Client(String serverIP, int serverPort, String username) {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost");
+            Registry registry = LocateRegistry.getRegistry(serverIP, serverPort);
             IRemoteChatList remoteChat = (IRemoteChatList) registry.lookup("RemoteChat");
             IRemoteSketches remoteSketches = (IRemoteSketches) registry.lookup("RemoteSketches");
             IRemoteUserList remoteUsers = (IRemoteUserList) registry.lookup("RemoteUsers");
-            UserInterface clientUI = new UserInterface(username + " [Client]", remoteChat, username);
+            UserInterface clientUI = new UserInterface(username + " [Client]", remoteChat, username, false);
 
             RemoteUserPanel userPanel = clientUI.getUserPanel();
-            UnicastRemoteObject.exportObject(userPanel, serverPort);
+            UnicastRemoteObject.exportObject(userPanel, 1099);
             remoteUsers.addClient(username, userPanel);
 
             RemoteChatPanel chatPanel = clientUI.getChatPanel();
-            UnicastRemoteObject.exportObject(chatPanel, serverPort);
+            UnicastRemoteObject.exportObject(chatPanel, 1099);
             remoteChat.addChatPanel(chatPanel);
 
             MyCanvas clientCanvas = clientUI.getCanvas();
             clientCanvas.setRemoteSketches(remoteSketches);
-            UnicastRemoteObject.exportObject(clientCanvas, serverPort);
+            UnicastRemoteObject.exportObject(clientCanvas, 1099);
             remoteSketches.addClientCanvas(clientCanvas);
 
             log.info("New client \"" + username + "\" connected to " + serverIP + ":" + serverPort);

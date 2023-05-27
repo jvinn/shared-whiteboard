@@ -15,7 +15,7 @@ public class MyCanvas extends JPanel implements IRemoteCanvas {
     private ShapeType currentShapeType = ShapeType.FREEHAND;
     private Color currentColor = Color.BLACK;
     private Point startPoint, endPoint;
-    private final Sketches sketches = new Sketches();
+    private Sketches sketches = new Sketches();
     private IRemoteSketches remoteSketches;
 
     public MyCanvas() {
@@ -28,7 +28,6 @@ public class MyCanvas extends JPanel implements IRemoteCanvas {
             @Override
             public void mouseReleased(MouseEvent e) {
                 endPoint = e.getPoint();
-
                 try {
                     if(currentShapeType == ShapeType.FREEHAND) {
                         sketches.addFreehand(null, currentColor);
@@ -91,7 +90,24 @@ public class MyCanvas extends JPanel implements IRemoteCanvas {
         repaint();
     }
 
+    @Override
+    public void closeCanvas() {
+        System.exit(0);
+    }
+
     public void setCurrentColor(Color currentColor) {
         this.currentColor = currentColor;
+    }
+
+    public Sketches getSketches() {
+        return sketches;
+    }
+
+    public void setSketches(Sketches sketches) {
+        this.sketches = sketches;
+    }
+
+    public IRemoteSketches getRemoteSketches() {
+        return remoteSketches;
     }
 }

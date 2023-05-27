@@ -1,0 +1,51 @@
+@startuml
+
+class Client {
+    +Client(String, int, String)
+}
+
+class Server {
+    +Server(String, int, String)
+}
+
+class UserInterface {
+    +getCanvas(): MyCanvas
+    +getUserPanel(): RemoteUserPanel
+    +getChatPanel(): RemoteChatPanel
+    +updateUserList(List<String>)
+}
+
+class MyCanvas {
+    +setCurrentShapeType(ShapeType): void
+    +setRemoteSketches(IRemoteSketches): void
+    +updateCanvas(ArrayList<ColoredElement<Shape>>, ArrayList<ColoredElement<Point>>, HashMap<String, ColoredElement<Point>>): void
+    +setCurrentColor(Color): void
+}
+
+class IRemoteChatList {
+}
+
+class IRemoteSketches {
+}
+
+class IRemoteUserList {
+}
+
+Client --> IRemoteChatList
+Client --> IRemoteSketches
+Client --> IRemoteUserList
+Client --> UserInterface
+
+Server --> IRemoteChatList
+Server --> IRemoteSketches
+Server --> IRemoteUserList
+Server --> UserInterface
+
+UserInterface --> MyCanvas
+
+MyCanvas --> IRemoteSketches
+MyCanvas ..> ShapeType
+MyCanvas ..> ColoredElement
+MyCanvas ..> Color
+
+@enduml

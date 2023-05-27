@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CreateWhiteBoard">
+    <output-path>$PROJECT_DIR$/</output-path>
+    <root id="archive" name="CreateWhiteBoard.jar">
+      <element id="module-output" name="whiteboard-server" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/server/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

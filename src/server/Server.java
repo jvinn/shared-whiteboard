@@ -12,11 +12,13 @@ public class Server {
 
     public Server(String serverIP, int serverPort, String username) {
         try {
-            Registry registry = LocateRegistry.createRegistry(1099); // TODO: The serverIP isn't used - CONCERNING!
+            System.setProperty("java.rmi.server.hostname", serverIP);
+            Registry registry = LocateRegistry.createRegistry(serverPort);
             IRemoteSketches remoteSketches = new RemoteSketches();
-            IRemoteUserList remoteUsers = new RemoteUserList();
+            IRemoteUserList remoteUsers = new RemoteUserList(username);
             IRemoteChatList remoteChat = new RemoteChatList();
-            UserInterface serverUI = new UserInterface(username + " [Server]", remoteChat, username);
+            UserInterface serverUI = new UserInterface(username + " [Server]", remoteChat, username, true);
+            serverUI.updateUserList(remoteUsers.getUserList());
 
             remoteSketches.setServerCanvas(serverUI.getCanvas());
             remoteUsers.setServerUI(serverUI);
