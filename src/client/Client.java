@@ -23,16 +23,16 @@ public class Client {
             UserInterface clientUI = new UserInterface(username + " [Client]", remoteChat, username, false);
 
             RemoteUserPanel userPanel = clientUI.getUserPanel();
-            UnicastRemoteObject.exportObject(userPanel, 1099);
+            UnicastRemoteObject.exportObject(userPanel, 0);
             remoteUsers.addClient(username, userPanel);
 
             RemoteChatPanel chatPanel = clientUI.getChatPanel();
-            UnicastRemoteObject.exportObject(chatPanel, 1099);
+            UnicastRemoteObject.exportObject(chatPanel, 0);
             remoteChat.addChatPanel(chatPanel);
 
             MyCanvas clientCanvas = clientUI.getCanvas();
             clientCanvas.setRemoteSketches(remoteSketches);
-            UnicastRemoteObject.exportObject(clientCanvas, 1099);
+            UnicastRemoteObject.exportObject(clientCanvas, 0);
             remoteSketches.addClientCanvas(clientCanvas);
 
             log.info("New client \"" + username + "\" connected to " + serverIP + ":" + serverPort);

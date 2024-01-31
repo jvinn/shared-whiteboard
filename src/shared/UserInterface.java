@@ -29,11 +29,6 @@ public class UserInterface {
         jFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                try {
-                    canvasPanel.getRemoteSketches().closeClients();
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
-                }
                 System.exit(0);
             }
         });
