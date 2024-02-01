@@ -1,6 +1,4 @@
-Author: James Vinnicombe
-
-About: This is a simple whiteboard application that allows multiple users to draw on a shared whiteboard.
+This is a simple whiteboard application that allows multiple users to draw on a shared whiteboard.
 
 
 To create a new whiteboard, run the following:
