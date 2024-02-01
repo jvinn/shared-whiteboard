@@ -11,4 +11,4 @@ Here's an example of some simple commands to get it started:
 java -jar CreateWhiteBoard.jar localhost 4444 jack
 java -jar JoinWhiteBoard.jar localhost 4444 jill
 
-![Alt text](example.jpg?raw=true "Example")
+![alt text](https://raw.githubusercontent.com/jvinn/shared-whiteboard/main/example.jpg)
